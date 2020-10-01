@@ -32,7 +32,7 @@ public class Autorizacao {
     /*mapeando a tabela uau_usuario_autorizacao que liga autorizacao a usuario n:n*/
     @JsonView(View.AutorizacaoResumo.class)
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "autorizacoes") //atributo em usuario onde é mapeado o relacionamento.
-    /*@JsonIgnore é brabo, independende de json view ele ignora tudo*/
+    /*@JsonIgnore independende de json view ele ignora tudo*/
     private Set<Usuario> usuarios;
 
     /*get/set id*/
