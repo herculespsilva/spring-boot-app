@@ -4,7 +4,7 @@ use anotacao;
 
 create user 'user'@'localhost' identified by 'pass123';
 
-GRANT ALL PRIVILEGES ON * . * TO 'victor'@'localhost';
+GRANT ALL PRIVILEGES ON * . * TO 'user'@'localhost';
 
 
 
