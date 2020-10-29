@@ -22,13 +22,10 @@ import br.gov.sp.fatec.springbootapp.entity.Autorizacao;
 import br.gov.sp.fatec.springbootapp.entity.Usuario;
 import br.gov.sp.fatec.springbootapp.service.SegurancaService;
 
-@RestController /*anotacao que permite que a classe seja vista como controller e os metodos podem ser rotas*/
-@RequestMapping(value = "/usuario") /*anotacao que serve para endereçar o servico*/
+@RestController
+@RequestMapping(value = "/usuario")
 @CrossOrigin
 public class UsuarioController {
-    
-    /*criação das rotas*/
-    /*serviço para trazer todos os usuario*/
 
     @Autowired
     private SegurancaService segurancaService;
