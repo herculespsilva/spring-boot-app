@@ -1,10 +1,8 @@
 # Projeto Exemplo com Spring Boot
 
-Para rodar: mvn spring-boot:run
-Para saber a URL: gp url 8080
-Usuário da aplicação: admin / senha: admin
-
 ### Pré-requisitos
+Para a execução local do projeto, é necessaria a instalação do Apache Maven, MySql e JAVA. 
+Caso contrario, ste projeto esta configurado para rodar no Gitpod.
 
 ### Instalação
 #### 1 - Clone o projeto para uma máquina local
