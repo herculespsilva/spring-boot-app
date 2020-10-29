@@ -5,10 +5,6 @@ Para saber a URL: gp url 8080
 Usuário da aplicação: admin / senha: admin
 
 ### Pré-requisitos
-```
-Para a execução local do projeto, é necessaria a instalação do Apache Maven, MySql e JAVA. 
-Caso contrario, ste projeto esta configurado para rodar no Gitpod.
-```
 
 ### Instalação
 #### 1 - Clone o projeto para uma máquina local
@@ -23,11 +19,15 @@ mvn clean package
 ```
 mvn spring-boot:run
 ```
-#### 4 - Rota padrão
+#### 4 - Para saber a URL
+```
+gp url 8080
+```
+#### 5 - Rota padrão
 ```
 localhost:8080/spring-app
 ```
-#### 5 - Usuário administrador
+#### 6 - Usuário administrador
 ```
 User: admin
 Senha: admin
