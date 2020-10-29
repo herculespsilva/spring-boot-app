@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +35,7 @@ public class SegurancaServiceImpl implements SegurancaService {
     /*Serviços usam varios repositorios, comum.*/
 
     @Transactional 
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public Usuario criarUsuario(String nome, String senha, String autorizacao) {
 
         Autorizacao aut= autRepo.findByNome(autorizacao);
@@ -56,6 +58,8 @@ public class SegurancaServiceImpl implements SegurancaService {
     }
 
     @Override
+    @PreAuthorize("isAuthenticated()")
+    //@PostAuthorize
     public List<Usuario>buscarTodosUsuarios()
     {
         return usuarioRepo.findAll();
