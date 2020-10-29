@@ -33,7 +33,7 @@ public class SegurancaServiceImpl implements SegurancaService {
     private PasswordEncoder passEncoder;
 
     @Transactional
-    // @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public Usuario criarUsuario(String nome, String senha, String autorizacao) {
 
         Autorizacao aut = autRepo.findByNome(autorizacao);
@@ -53,13 +53,14 @@ public class SegurancaServiceImpl implements SegurancaService {
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ROLE_ADMIN')") // funciona das somente com a palavra 'ADMIN'
     // @PostAuthorize
     public List<Usuario> buscarTodosUsuarios() {
         return usuarioRepo.findAll();
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN','USUARIO')")
     public Usuario buscarUsuarioPorId(Long id) {
         Optional<Usuario> usuarioOp = usuarioRepo.findById(id);
         if (usuarioOp.isPresent()) {
@@ -67,8 +68,9 @@ public class SegurancaServiceImpl implements SegurancaService {
         }
         throw new RegistroNaoEncontradoException("usuario nao encontrado!");
     }
-
+    
     @Override
+    @PreAuthorize("isAuthenticated()")
     public Usuario buscarUsuarioPorNome(String nome) {
         Usuario usuario = usuarioRepo.findByNome(nome);
         if (usuario != null) {
@@ -77,6 +79,8 @@ public class SegurancaServiceImpl implements SegurancaService {
         throw new RegistroNaoEncontradoException("usuario nao encontrado!");
     }
 
+    @Override
+    @PreAuthorize("isAuthenticated()")
     public Autorizacao buscarAutorizacaoPorNome(String nome) {
         Autorizacao autorizacao = autRepo.findByNome(nome);
         if (autorizacao != null) {
