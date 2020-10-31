@@ -4,7 +4,7 @@
 Para a execução local do projeto, é necessaria a instalação do Apache Maven, MySql e JAVA. 
 Caso contrario, o projeto esta configurado para rodar no Gitpod.
 
-[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/mineda/spring-rest-security) 
+[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://https://github.com/herculespsilva/spring-boot-app) 
 
 ### Instalação
 #### 1 - Clone o projeto para uma máquina local
