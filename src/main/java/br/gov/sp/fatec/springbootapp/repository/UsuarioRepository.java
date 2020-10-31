@@ -7,22 +7,20 @@ import org.springframework.data.jpa.repository.Query;
 
 import br.gov.sp.fatec.springbootapp.entity.Usuario;
 
-public interface UsuarioRepository extends JpaRepository<Usuario,Long>{
-    
-    /*criacao de querys -query method e jpql (jqpl atente melhor consulta mais complexas)*/
+public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
     public List<Usuario> findByNomeContainsIgnoreCase(String nome);
 
     public Usuario findByNome(String nome);
 
-    @Query ("select u from Usuario u where u.nome=?1")
-    public Usuario buscaUsuarioporNome(String nome);
+    @Query("select u from Usuario u where u.nome = ?1")
+    public Usuario buscaUsuarioPorNome(String nome);
 
-    public Usuario findByNomeAndSenha(String nome,String senha);
+    public Usuario findByNomeAndSenha(String nome, String senha);
 
-    @Query("Select u from Usuario u where u.nome = ?1 and u.senha = ?2")
-    public Usuario busaUsuarioPorNomeESenha(String nome, String senha);
+    @Query("select u from Usuario u where u.nome = ?1 and u.senha = ?2")
+    public Usuario buscaUsuarioPorNomeESenha(String nome, String senha);
 
-    public List<Usuario> findByAutorizacoesNome(String autorizacao);
+    public List<Usuario> findByAutorizacoesNome(String nome);
 
     @Query("select u from Usuario u inner join u.autorizacoes a where a.nome =?1")
     public List<Usuario> buscaPorNomeAutorizacao(String autorizacao);

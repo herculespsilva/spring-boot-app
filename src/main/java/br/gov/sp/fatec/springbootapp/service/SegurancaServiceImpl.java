@@ -24,13 +24,13 @@ import br.gov.sp.fatec.springbootapp.repository.UsuarioRepository;
 public class SegurancaServiceImpl implements SegurancaService {
 
     @Autowired
-    private AutorizacaoRepository autRepo;
+    private AutorizacaoRepository autoRepo;
 
     @Autowired
     private UsuarioRepository usuarioRepo;
 
     @Autowired
-    private PasswordEncoder passEnconder;
+    private PasswordEncoder passEncoder;
 
     /*
      * serviceImpl-basicamente estamos na camada de negocio, onde estão as operações
@@ -44,50 +44,32 @@ public class SegurancaServiceImpl implements SegurancaService {
      * Serviços usam varios repositorios, comum. 
     */
 
-    @Transactional
-    public Usuario criarUsuario(String nome, String senha, String autorizacao) {
-
-        Autorizacao aut = autRepo.findByNome(autorizacao);
-        if (aut == null) {
-            aut = new Autorizacao();
-            aut.setNome(autorizacao);
-            autRepo.save(aut);
-        }
-
-        Usuario usuario = new Usuario();
-        usuario.setNome(nome);
-        usuario.setSenha(passEnconder.encode(senha));
-        usuario.setAutorizacoes(new HashSet<Autorizacao>());
-        usuario.getAutorizacoes().add(aut);
-        usuarioRepo.save(usuario);
-
-        return usuario;
-    }
-
-    // O spring oferece a possibilidade de autenticar os metodos, não apenas as
-    // rotas no controller.
     @Override
-    //@PreAuthorize("isAuthenticated()")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<Usuario> buscarTodosUsuarios() {
+    public List<Usuario>buscarTodosUsuarios()
+    {
         return usuarioRepo.findAll();
     }
 
     @Override
     @PreAuthorize("hasAnyRole('ADMIN','USUARIO')")
-    public Usuario buscarUsuarioPorId(Long id) {
-        Optional<Usuario> usuarioOp = usuarioRepo.findById(id);
-        if (usuarioOp.isPresent()) {
+    public Usuario buscarUsuarioPorId(Long id)
+    {
+        Optional<Usuario> usuarioOp= usuarioRepo.findById(id);
+        if(usuarioOp.isPresent())
+        {
             return usuarioOp.get();
         }
-        throw new RegistroNaoEncontradoException("usuario nao encontrado!");
+         throw new RegistroNaoEncontradoException("usuario nao encontrado!");
     }
 
     @Override
     @PreAuthorize("isAuthenticated()")
-    public Usuario buscarUsuarioPorNome(String nome) {
+    public Usuario buscarUsuarioPorNome(String nome)
+    {
         Usuario usuario = usuarioRepo.findByNome(nome);
-        if (usuario != null) {
+        if(usuario!=null)
+        {
             return usuario;
         }
         throw new RegistroNaoEncontradoException("usuario nao encontrado!");
@@ -96,11 +78,54 @@ public class SegurancaServiceImpl implements SegurancaService {
     @Override
     @PreAuthorize("isAuthenticated()")
     public Autorizacao buscarAutorizacaoPorNome(String nome) {
-        Autorizacao autorizacao = autRepo.findByNome(nome);
+        Autorizacao autorizacao = autoRepo.findByNome(nome);
         if (autorizacao != null) {
             return autorizacao;
         }
         throw new RegistroNaoEncontradoException("autorizacao nao encontrada!");
+    }
+
+    @Transactional
+    public Usuario criaUsuario(String nome, String senha, String autorizacao) {
+        Autorizacao aut = autoRepo.findByNome(autorizacao);
+        if(aut == null) {
+            aut = new Autorizacao();
+            aut.setNome(autorizacao);
+            autoRepo.save(aut);
+        }
+        Usuario usuario = new Usuario();
+        usuario.setNome(nome);
+        usuario.setSenha(passEncoder.encode(senha));
+        usuario.setAutorizacoes(new HashSet<Autorizacao>());
+        usuario.getAutorizacoes().add(aut);
+        usuarioRepo.save(usuario);
+
+        return usuario;
+    }
+
+    @Transactional
+    public Usuario updateUsuario(Long id, String nome, String senha, String autorizacao) {
+
+        Autorizacao aut = autoRepo.findByNome(autorizacao);
+        if (aut == null) {
+            aut = new Autorizacao();
+            aut.setNome(autorizacao);
+            autoRepo.save(aut);
+        }
+
+        return usuarioRepo.findById(id)
+           .map(user -> {
+               user.setNome(nome);
+               user.setSenha(senha);
+               Usuario updated = usuarioRepo.save(user);
+
+               return updated;
+        }).orElse(null);
+
+    }
+
+    public void deleteUsuario(Long id) {
+        usuarioRepo.deleteById(id);       
     }
 
     //criando método para realizar login
