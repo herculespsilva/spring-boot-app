@@ -30,10 +30,21 @@ public class SegurancaServiceImpl implements SegurancaService {
     private UsuarioRepository usuarioRepo;
 
     @Autowired
-    private PasswordEncoder passEncoder;
+    private PasswordEncoder passEnconder;
+
+    /*
+     * serviceImpl-basicamente estamos na camada de negocio, onde estão as operações
+     * e regras de negocio. não deve se colocar isso no controller. Controller
+     * somente repassa para a camada de negocios, pega a resposta e devolve para a view.
+     *
+     * transactional pode ser colocado em cima do metodo ou da classe, se colocado
+     * na classe, todos os metodos levarão essa operação
+     *
+     *
+     * Serviços usam varios repositorios, comum. 
+    */
 
     @Transactional
-    @PreAuthorize("isAuthenticated()")
     public Usuario criarUsuario(String nome, String senha, String autorizacao) {
 
         Autorizacao aut = autRepo.findByNome(autorizacao);
@@ -42,9 +53,10 @@ public class SegurancaServiceImpl implements SegurancaService {
             aut.setNome(autorizacao);
             autRepo.save(aut);
         }
+
         Usuario usuario = new Usuario();
         usuario.setNome(nome);
-        usuario.setSenha(passEncoder.encode(senha));
+        usuario.setSenha(passEnconder.encode(senha));
         usuario.setAutorizacoes(new HashSet<Autorizacao>());
         usuario.getAutorizacoes().add(aut);
         usuarioRepo.save(usuario);
@@ -52,9 +64,11 @@ public class SegurancaServiceImpl implements SegurancaService {
         return usuario;
     }
 
+    // O spring oferece a possibilidade de autenticar os metodos, não apenas as
+    // rotas no controller.
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN')") // funciona das somente com a palavra 'ADMIN'
-    // @PostAuthorize
+    //@PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Usuario> buscarTodosUsuarios() {
         return usuarioRepo.findAll();
     }
@@ -68,7 +82,7 @@ public class SegurancaServiceImpl implements SegurancaService {
         }
         throw new RegistroNaoEncontradoException("usuario nao encontrado!");
     }
-    
+
     @Override
     @PreAuthorize("isAuthenticated()")
     public Usuario buscarUsuarioPorNome(String nome) {
@@ -89,16 +103,17 @@ public class SegurancaServiceImpl implements SegurancaService {
         throw new RegistroNaoEncontradoException("autorizacao nao encontrada!");
     }
 
+    //criando método para realizar login
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario usuario = usuarioRepo.findByNome(username); 
+        Usuario usuario = usuarioRepo.findByNome(username);
         if (usuario == null) {
-            throw new UsernameNotFoundException("Usuário " + username + " não encontrado");
+            throw new UsernameNotFoundException("Usuário " + username + " não encontrado! ");
         }
         return User.builder().username(username).password(usuario.getSenha())
-            .authorities(usuario.getAutorizacoes().stream()
-                .map(Autorizacao::getNome).collect(Collectors.toList())
-                .toArray(new String[usuario.getAutorizacoes().size()]))
-            .build();
+                .authorities(usuario.getAutorizacoes().stream()
+                    .map(Autorizacao::getNome).collect(Collectors.toList())
+                     .toArray(new String[usuario.getAutorizacoes().size()]))
+                .build();
     }
 }
