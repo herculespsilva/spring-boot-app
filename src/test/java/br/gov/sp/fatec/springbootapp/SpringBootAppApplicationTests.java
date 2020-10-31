@@ -35,10 +35,10 @@ class SpringBootAppApplicationTests {
     @BeforeAll
     static void init(@Autowired JdbcTemplate jdbcTemplate) {
         jdbcTemplate.update("insert into usr_usuario (usr_nome, usr_senha) values (?, ?)",
-                            "professor", "pass123");
-        jdbcTemplate.update("insert aut_autorizacao (aut_nome) values (?)",
-                            "ROLE_USUARIO");
-        jdbcTemplate.update("insert into atu_atuacao (usr_id, aut_id) values (?, ?)",
+                            "admin", "$2a$10$i3.Z8Yv1Fwl0I5SNjdCGkOTRGQjGvHjh/gMZhdc3e7LIovAklqM6C");
+        jdbcTemplate.update("insert into aut_autorizacao (aut_nome) values (?)",
+                            "ROLE_ADMIN");
+        jdbcTemplate.update("insert into uau_usuario_autorizacao values (?, ?)",
                             1L, 1L);
     }
 
@@ -88,12 +88,12 @@ class SpringBootAppApplicationTests {
     }
     @Test
     void testBuscaUsuarioNomeSenha() {
-        Usuario usuario = usuarioRepo.findByNomeAndSenha("admin","123");
+        Usuario usuario = usuarioRepo.findByNomeAndSenha("admin","$2a$10$i3.Z8Yv1Fwl0I5SNjdCGkOTRGQjGvHjh/gMZhdc3e7LIovAklqM6C");
         assertNotNull(usuario);
     }
     @Test
     void testBuscaUsuarioNomeSenhaQuery() {
-        Usuario usuario = usuarioRepo.buscaUsuarioPorNomeESenha("admin","123");
+        Usuario usuario = usuarioRepo.buscaUsuarioPorNomeESenha("admin","$2a$10$i3.Z8Yv1Fwl0I5SNjdCGkOTRGQjGvHjh/gMZhdc3e7LIovAklqM6C");
         assertNotNull(usuario);
     }
     @Test
