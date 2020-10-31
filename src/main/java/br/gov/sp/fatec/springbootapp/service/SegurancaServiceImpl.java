@@ -105,23 +105,24 @@ public class SegurancaServiceImpl implements SegurancaService {
 
     @Transactional
     public Usuario updateUsuario(Long id, String nome, String senha, String autorizacao) {
-
+        Optional<Usuario> oldUsuario = usuarioRepo.findById(id);
         Autorizacao aut = autoRepo.findByNome(autorizacao);
+        
         if (aut == null) {
             aut = new Autorizacao();
             aut.setNome(autorizacao);
             autoRepo.save(aut);
         }
 
-        return usuarioRepo.findById(id)
-           .map(user -> {
-               user.setNome(nome);
-               user.setSenha(senha);
-               Usuario updated = usuarioRepo.save(user);
+        if(oldUsuario.isPresent()){
+            Usuario usuario = oldUsuario.get();
+            usuario.setNome(nome);
+            usuario.setSenha(senha);
+            usuarioRepo.save(usuario);
 
-               return updated;
-        }).orElse(null);
-
+            return usuario;
+        }
+        throw new RegistroNaoEncontradoException("Usuario não encontrado!");
     }
 
     public void deleteUsuario(Long id) {

@@ -82,13 +82,13 @@ public class UsuarioController {
         }
     }
 
-    @PutMapping(value="/altera/{id}")
-    public Usuario update(@PathVariable("id") long id,@RequestBody Usuario user) {
+    @PutMapping(value = "/altera/{id}")
+    public ResponseEntity<Usuario> Put(@PathVariable(value = "id") long id, @RequestBody Usuario user) {
         try{
-            return segurancaService.updateUsuario(id, user.getNome(), user.getSenha(), "ROLE_USUARIO");
+            segurancaService.updateUsuario(id, user.getNome(), user.getSenha(), "ROLE_USUARIO");
+            return new ResponseEntity<Usuario>(user, HttpStatus.NO_CONTENT);
         }catch (Exception e){
-            return null;
-        }
-
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }    
     }
 }
