@@ -2,7 +2,7 @@
 
 ### Pré-requisitos
 Para a execução local do projeto, é necessaria a instalação do Apache Maven, MySql e JAVA. 
-Caso contrario, ste projeto esta configurado para rodar no Gitpod.
+Caso contrario, o projeto esta configurado para rodar no Gitpod.
 
 ### Instalação
 #### 1 - Clone o projeto para uma máquina local
